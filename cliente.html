@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GraphQL API Client</title>
+</head>
+<body>
+    <h1>GraphQL API Client</h1>
+    <div>
+        <h2>Items</h2>
+        <ul id="items-list"></ul>
+    </div>
+    <div>
+        <h2>Agregar Item</h2>
+        <input type="text" id="item-name" placeholder="Item name">
+        <button onclick="addItem()">Agregar</button>
+    </div>
+    
+    <script>
+        const graphqlEndpoint = 'http://localhost:4000/graphql';
+
+        async function fetchGraphQL(query, variables = {}) {
+            const response = await fetch(graphqlEndpoint, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    query,
+                    variables
+                })
+            });
+            return response.json();
+        }
+
+        // Obtener todos los items
+        async function getItems() {
+            const query = `
+                query {
+                    items {
+                        id
+                        name
+                    }
+                }
+            `;
+            const result = await fetchGraphQL(query);
+            const items = result.data.items;
+            const itemsList = document.getElementById('items-list');
+            itemsList.innerHTML = '';
+            items.forEach(item => {
+                const li = document.createElement('li');
+                li.textContent = item.name;
+                itemsList.appendChild(li);
+            });
+        }
+
+        // Agregar un nuevo item
+        async function addItem() {
+            const itemName = document.getElementById('item-name').value;
+            const mutation = `
+                mutation($name: String!) {
+                    addItem(name: $name) {
+                        id
+                        name
+                    }
+                }
+            `;
+            const variables = { name: itemName };
+            const result = await fetchGraphQL(mutation, variables);
+            const newItem = result.data.addItem;
+            console.log('Item agregado:', newItem);
+            getItems();  // Actualizar la lista de items
+        }
+
+        // Inicializar la lista de items al cargar la página
+        getItems();
+    </script>
+</body>
+</html>
