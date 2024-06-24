@@ -46,6 +46,6 @@ server.start().then(() => {
     server.applyMiddleware({ app });
 
     app.listen({ port: 4000 }, () =>
-        console.log(`Servidor GraphQL corriendo en http://localhost:4000${server.graphqlPath}`)
+        console.log(`GraphQL Server runs on http://localhost:4000${server.graphqlPath}`)
     );
 });

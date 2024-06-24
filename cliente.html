@@ -34,7 +34,7 @@
             return response.json();
         }
 
-        // Obtener todos los items
+        // Get all items
         async function getItems() {
             const query = `
                 query {
@@ -55,7 +55,7 @@
             });
         }
 
-        // Agregar un nuevo item
+        // Add new item
         async function addItem() {
             const itemName = document.getElementById('item-name').value;
             const mutation = `
@@ -70,10 +70,9 @@
             const result = await fetchGraphQL(mutation, variables);
             const newItem = result.data.addItem;
             console.log('Item agregado:', newItem);
-            getItems();  // Actualizar la lista de items
+            getItems();  // Update items
         }
 
-        // Inicializar la lista de items al cargar la página
         getItems();
     </script>
 </body>
